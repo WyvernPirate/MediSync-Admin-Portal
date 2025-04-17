@@ -1,13 +1,13 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { toast } from "sonner";
-
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,36 +16,26 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simple validation
     if (!email || !password) {
       toast.error("Please enter both email and password");
       setIsLoading(false);
       return;
     }
 
-    // Mock authentication - in a real app, you would connect to a backend
-    setTimeout(() => {
-      // Demo credentials for testing: admin@meddash.com / admin123
-      if (email === "admin@meddash.com" && password === "admin123") {
-        // Store authentication state
-        localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("user", JSON.stringify({
-          email,
-          role: "admin",
-          name: "Admin User"
-        }));
-        
-        toast.success("Login successful");
-        navigate("/");
-      } else {
-        toast.error("Invalid credentials");
-      }
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      toast.success("Login successful");
+      navigate("/");
+    } catch (error) {
+      toast.error("Invalid credentials");
+      console.error("Login error:", error);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
