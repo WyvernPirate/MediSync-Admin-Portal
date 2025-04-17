@@ -89,7 +89,7 @@ export default function DoctorDetailPage() {
           <Card className="lg:col-span-1">
             <CardContent className="pt-6 flex flex-col items-center text-center">
               <Avatar className="h-32 w-32 mb-4">
-                <AvatarImage src={doctor.avatar} alt={doctor.name} />
+                <AvatarImage src={doctor.imageUrl} alt={doctor.name} />
                 <AvatarFallback className="text-2xl bg-medical-primary text-white">
                   {getInitials(doctor.name)}
                 </AvatarFallback>
@@ -112,10 +112,6 @@ export default function DoctorDetailPage() {
                 <div className="flex items-center">
                   <Phone className="w-4 h-4 mr-3 text-gray-500" />
                   <span className="text-sm">{doctor.phone}</span>
-                </div>
-                <div className="flex items-center">
-                  <Building className="w-4 h-4 mr-3 text-gray-500" />
-                  <span className="text-sm">{doctor.hospital}</span>
                 </div>
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-3 text-gray-500" />
@@ -141,20 +137,12 @@ export default function DoctorDetailPage() {
                   <div className="text-2xl font-bold">{doctor.experience}</div>
                   <div className="text-xs text-gray-500">Years Experience</div>
                 </div>
-                
-                <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center">
-                  <div className="bg-medical-primary/10 p-2 rounded-full mb-3">
-                    <Users className="h-6 w-6 text-medical-primary" />
-                  </div>
-                  <div className="text-2xl font-bold">{doctor.patients}</div>
-                  <div className="text-xs text-gray-500">Total Patients</div>
-                </div>
-                
+      
                 <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center">
                   <div className="bg-medical-primary/10 p-2 rounded-full mb-3">
                     <Star className="h-6 w-6 text-medical-primary" />
                   </div>
-                  <div className="text-2xl font-bold">{doctor.ratings}</div>
+                  <div className="text-2xl font-bold">{doctor.rating}</div>
                   <div className="text-xs text-gray-500">Overall Rating</div>
                 </div>
               </div>
@@ -178,7 +166,6 @@ export default function DoctorDetailPage() {
                   <div className="flex">
                     <div className="flex-shrink-0 h-4 w-4 rounded-full bg-gray-300 mt-1" />
                     <div className="ml-4">
-                      <div className="font-medium">Started at {doctor.hospital}</div>
                       <div className="text-sm text-gray-500">
                         {new Date(new Date(doctor.createdAt).getTime() - (doctor.experience * 365 * 24 * 60 * 60 * 1000)).toLocaleDateString("en-US", {
                           year: "numeric",
