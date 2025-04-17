@@ -20,12 +20,11 @@ export default function Index() {
   const activeDoctors = doctors.filter(doc => doc.status === "active").length;
   const onLeaveDoctors = doctors.filter(doc => doc.status === "on-leave").length;
   const retiredDoctors = doctors.filter(doc => doc.status === "retired").length;
-  const totalPatients = doctors.reduce((acc, doctor) => acc + doctor.patients, 0);
   const avgExperience = doctors.length 
     ? Math.round(doctors.reduce((acc, doctor) => acc + doctor.experience, 0) / doctors.length) 
     : 0;
   const avgRating = doctors.length 
-    ? parseFloat((doctors.reduce((acc, doctor) => acc + doctor.ratings, 0) / doctors.length).toFixed(1)) 
+    ? parseFloat((doctors.reduce((acc, doctor) => acc + doctor.rating, 0) / doctors.length).toFixed(1)) 
     : 0;
 
   return (
@@ -68,12 +67,6 @@ export default function Index() {
               <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
               <UserCog className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalPatients.toLocaleString()}</div>
-              <div className="text-xs text-muted-foreground mt-3">
-                Across all doctors
-              </div>
-            </CardContent>
           </Card>
           
           <Card>
