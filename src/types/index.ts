@@ -6,12 +6,11 @@ export interface Doctor {
   bio: string;
   imageUrl: string;
   rating: number;
-  hospital: string;
   email: string;
   phone: string;
+  address: string;
   experience: number;
   availability: string;
-  patients: number;
   status: 'active' | 'on-leave' | 'retired';
   createdAt: string;
 }
