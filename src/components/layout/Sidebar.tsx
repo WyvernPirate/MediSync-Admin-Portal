@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +13,7 @@ import {
   LogOut,
   LucideIcon
 } from "lucide-react";
+import { toast } from "sonner";
 
 type SidebarItem = {
   icon: LucideIcon;
@@ -45,10 +46,36 @@ const sidebarItems: SidebarItem[] = [
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const [userData, setUserData] = useState<{name?: string, email?: string} | null>(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    // Get user data from localStorage
+    const userDataStr = localStorage.getItem("user");
+    if (userDataStr) {
+      try {
+        setUserData(JSON.parse(userDataStr));
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
+  }, []);
   
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
+  };
+  
+  const handleLogout = () => {
+    // Clear authentication data
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("user");
+    
+    // Show success message
+    toast.success("Logged out successfully");
+    
+    // Redirect to login page
+    navigate("/login");
   };
 
   return (
@@ -100,6 +127,14 @@ export default function Sidebar() {
           </Button>
         </div>
         
+        {/* User info */}
+        {userData && (
+          <div className="px-3 py-2 mb-6 border-b border-gray-200">
+            <p className="font-medium text-gray-900">{userData.name || "Admin User"}</p>
+            <p className="text-sm text-gray-500">{userData.email || ""}</p>
+          </div>
+        )}
+        
         <div className="space-y-1 flex-1">
           {sidebarItems.map((item) => (
             <Link
@@ -122,6 +157,7 @@ export default function Sidebar() {
           <Button 
             variant="ghost" 
             className="w-full justify-start text-gray-700 hover:bg-gray-100 px-3 py-2"
+            onClick={handleLogout}
           >
             <LogOut className="h-5 w-5 mr-3" />
             <span>Logout</span>
