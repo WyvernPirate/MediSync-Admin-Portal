@@ -3,12 +3,13 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDRFSrbAFOQSDAqaY8kRK2JO8urT24eVHk",
+  authDomain: "doctorappointmentapp-9f11a.firebaseapp.com",
+  projectId: "doctorappointmentapp-9f11a",
+  storageBucket: "doctorappointmentapp-9f11a.firebasestorage.app",
+  messagingSenderId: "4258195571",
+  appId: "1:4258195571:web:9f95e3008d6fa4b0ece206",
+  measurementId: "G-TNRHQER43F"
 };
 
 const app = initializeApp(firebaseConfig);
