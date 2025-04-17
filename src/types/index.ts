@@ -3,13 +3,14 @@ export interface Doctor {
   id: string;
   name: string;
   specialty: string;
+  bio: string;
+  imageUrl: string;
+  rating: number;
   hospital: string;
   email: string;
   phone: string;
-  avatar?: string;
   experience: number;
   availability: string;
-  ratings: number;
   patients: number;
   status: 'active' | 'on-leave' | 'retired';
   createdAt: string;

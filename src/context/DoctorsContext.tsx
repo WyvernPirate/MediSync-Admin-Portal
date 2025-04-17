@@ -1,6 +1,7 @@
 
-import { createContext, useContext, useState, ReactNode } from "react";
-import { doctors as initialDoctors } from "../data/doctors";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { db } from "../lib/firebase";
 import { Doctor, DoctorFilter, DoctorFormData } from "../types";
 import { toast } from "sonner";
 
@@ -9,18 +10,41 @@ interface DoctorsContextType {
   filteredDoctors: Doctor[];
   loading: boolean;
   setFilter: (filter: DoctorFilter) => void;
-  addDoctor: (doctor: DoctorFormData) => void;
-  updateDoctor: (id: string, doctor: DoctorFormData) => void;
-  deleteDoctor: (id: string) => void;
+  addDoctor: (doctor: DoctorFormData) => Promise<void>;
+  updateDoctor: (id: string, doctor: DoctorFormData) => Promise<void>;
+  deleteDoctor: (id: string) => Promise<void>;
   getDoctor: (id: string) => Doctor | undefined;
 }
 
 const DoctorsContext = createContext<DoctorsContextType | undefined>(undefined);
 
 export const DoctorsProvider = ({ children }: { children: ReactNode }) => {
-  const [doctors, setDoctors] = useState<Doctor[]>(initialDoctors);
-  const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>(initialDoctors);
-  const [loading, setLoading] = useState(false);
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch doctors from Firestore on component mount
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'doctors'));
+        const doctorsData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Doctor[];
+        
+        setDoctors(doctorsData);
+        setFilteredDoctors(doctorsData);
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+        toast.error("Failed to fetch doctors");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
 
   const setFilter = (filter: DoctorFilter) => {
     setLoading(true);
@@ -50,59 +74,69 @@ export const DoctorsProvider = ({ children }: { children: ReactNode }) => {
     }
     
     setFilteredDoctors(filtered);
-    
-    // Simulate network request
-    setTimeout(() => {
-      setLoading(false);
-    }, 300);
+    setLoading(false);
   };
 
-  const addDoctor = (doctorData: DoctorFormData) => {
+  const addDoctor = async (doctorData: DoctorFormData) => {
     setLoading(true);
-    
-    const newDoctor: Doctor = {
-      ...doctorData,
-      id: `${Date.now()}`,
-      createdAt: new Date().toISOString()
-    };
-    
-    const updatedDoctors = [...doctors, newDoctor];
-    setDoctors(updatedDoctors);
-    setFilteredDoctors(updatedDoctors);
-    
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const docRef = await addDoc(collection(db, 'doctors'), {
+        ...doctorData,
+        createdAt: new Date().toISOString()
+      });
+      
+      const newDoctor: Doctor = {
+        id: docRef.id,
+        ...doctorData,
+        createdAt: new Date().toISOString()
+      };
+      
+      setDoctors(prev => [...prev, newDoctor]);
+      setFilteredDoctors(prev => [...prev, newDoctor]);
       toast.success("Doctor added successfully");
-    }, 300);
+    } catch (error) {
+      console.error("Error adding doctor:", error);
+      toast.error("Failed to add doctor");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateDoctor = (id: string, doctorData: DoctorFormData) => {
+  const updateDoctor = async (id: string, doctorData: DoctorFormData) => {
     setLoading(true);
-    
-    const updatedDoctors = doctors.map((doctor) =>
-      doctor.id === id ? { ...doctor, ...doctorData } : doctor
-    );
-    
-    setDoctors(updatedDoctors);
-    setFilteredDoctors(updatedDoctors);
-    
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await updateDoc(doc(db, 'doctors', id), doctorData);
+      
+      const updatedDoctors = doctors.map((doctor) =>
+        doctor.id === id ? { ...doctor, ...doctorData } : doctor
+      );
+      
+      setDoctors(updatedDoctors);
+      setFilteredDoctors(updatedDoctors);
       toast.success("Doctor updated successfully");
-    }, 300);
+    } catch (error) {
+      console.error("Error updating doctor:", error);
+      toast.error("Failed to update doctor");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deleteDoctor = (id: string) => {
+  const deleteDoctor = async (id: string) => {
     setLoading(true);
-    
-    const updatedDoctors = doctors.filter((doctor) => doctor.id !== id);
-    setDoctors(updatedDoctors);
-    setFilteredDoctors(updatedDoctors);
-    
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await deleteDoc(doc(db, 'doctors', id));
+      
+      const updatedDoctors = doctors.filter((doctor) => doctor.id !== id);
+      setDoctors(updatedDoctors);
+      setFilteredDoctors(updatedDoctors);
       toast.success("Doctor deleted successfully");
-    }, 300);
+    } catch (error) {
+      console.error("Error deleting doctor:", error);
+      toast.error("Failed to delete doctor");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getDoctor = (id: string) => {
