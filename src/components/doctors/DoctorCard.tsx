@@ -45,7 +45,7 @@ export default function DoctorCard({ doctor, onDelete }: DoctorCardProps) {
         <div className="p-6">
           <div className="flex justify-between">
             <Avatar className="h-12 w-12">
-              <AvatarImage src={doctor.avatar} alt={doctor.name} />
+              <AvatarImage src={doctor.imageUrl} alt={doctor.name} />
               <AvatarFallback className="bg-medical-primary text-white">
                 {getInitials(doctor.name)}
               </AvatarFallback>
@@ -81,14 +81,13 @@ export default function DoctorCard({ doctor, onDelete }: DoctorCardProps) {
           
           <h3 className="text-lg font-semibold mt-4">{doctor.name}</h3>
           <p className="text-gray-500 text-sm">{doctor.specialty}</p>
-          <p className="text-gray-500 text-sm mt-1">{doctor.hospital}</p>
           
           <div className="flex items-center mt-4 text-sm">
             <Badge variant="outline" className={getStatusColor(doctor.status)}>
               {doctor.status.charAt(0).toUpperCase() + doctor.status.slice(1)}
             </Badge>
             <div className="ml-auto flex items-center text-gray-500">
-              <span className="mr-1">{doctor.ratings}</span>
+              <span className="mr-1">{doctor.rating}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -109,10 +108,6 @@ export default function DoctorCard({ doctor, onDelete }: DoctorCardProps) {
           <div className="p-3 text-center">
             <p className="text-xs text-gray-500">Experience</p>
             <p className="font-semibold">{doctor.experience} years</p>
-          </div>
-          <div className="p-3 text-center">
-            <p className="text-xs text-gray-500">Patients</p>
-            <p className="font-semibold">{doctor.patients}</p>
           </div>
           <div className="p-3 text-center">
             <p className="text-xs text-gray-500">Since</p>

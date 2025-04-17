@@ -56,8 +56,7 @@ export const DoctorsProvider = ({ children }: { children: ReactNode }) => {
       filtered = filtered.filter(
         (doctor) =>
           doctor.name.toLowerCase().includes(searchTerm) ||
-          doctor.email.toLowerCase().includes(searchTerm) ||
-          doctor.hospital.toLowerCase().includes(searchTerm)
+          doctor.email.toLowerCase().includes(searchTerm)
       );
     }
     
