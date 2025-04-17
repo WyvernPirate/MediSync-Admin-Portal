@@ -90,14 +90,13 @@ export default function DoctorForm() {
         form.reset({
           name: doctor.name,
           specialty: doctor.specialty,
-          hospital: doctor.hospital,
+          
           email: doctor.email,
           phone: doctor.phone,
-          avatar: doctor.avatar || "",
+          avatar: doctor.imageUrl || "",
           experience: doctor.experience,
           availability: doctor.availability,
-          ratings: doctor.ratings,
-          patients: doctor.patients,
+          ratings: doctor.rating,
           status: doctor.status,
         });
       } else {
