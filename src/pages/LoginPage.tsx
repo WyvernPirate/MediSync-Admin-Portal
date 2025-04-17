@@ -30,7 +30,7 @@ export default function LoginPage() {
 
     try {
       // Query Firestore for admin with matching email
-      const adminsRef = collection(db, 'admin');
+      const adminsRef = collection(db, 'admins');
       const q = query(adminsRef, where("email", "==", email));
       const querySnapshot = await getDocs(q);
 
@@ -43,7 +43,7 @@ export default function LoginPage() {
       const admin = adminDoc.data();
       
       // Compare hashed password
-      const isValidPassword = await bcrypt.compare(password, admin.hashedPassword);
+      const isValidPassword = await bcrypt.compare(password, admin.passwordHash);
       
       if (isValidPassword) {
         // Store minimal auth state in localStorage
