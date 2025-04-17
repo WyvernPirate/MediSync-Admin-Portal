@@ -1,7 +1,9 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import bcrypt from "bcryptjs";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -27,12 +29,33 @@ export default function LoginPage() {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      toast.success("Login successful");
-      navigate("/");
+      // Query Firestore for admin with matching email
+      const adminsRef = collection(db, 'admin');
+      const q = query(adminsRef, where("email", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        toast.error("Invalid credentials");
+        return;
+      }
+
+      const adminDoc = querySnapshot.docs[0];
+      const admin = adminDoc.data();
+      
+      // Compare hashed password
+      const isValidPassword = await bcrypt.compare(password, admin.hashedPassword);
+      
+      if (isValidPassword) {
+        // Store minimal auth state in localStorage
+        localStorage.setItem("isAuthenticated", "true");
+        toast.success("Login successful");
+        navigate("/");
+      } else {
+        toast.error("Invalid credentials");
+      }
     } catch (error) {
-      toast.error("Invalid credentials");
       console.error("Login error:", error);
+      toast.error("An error occurred during login");
     } finally {
       setIsLoading(false);
     }
