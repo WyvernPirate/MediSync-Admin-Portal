@@ -106,10 +106,6 @@ export default function DoctorCard({ doctor, onDelete }: DoctorCardProps) {
         
         <div className="grid grid-cols-3 divide-x border-t">
           <div className="p-3 text-center">
-            <p className="text-xs text-gray-500">Experience</p>
-            <p className="font-semibold">{doctor.experience} years</p>
-          </div>
-          <div className="p-3 text-center">
             <p className="text-xs text-gray-500">Since</p>
             <p className="font-semibold">
               {new Date(doctor.createdAt).toLocaleDateString("en-US", {
