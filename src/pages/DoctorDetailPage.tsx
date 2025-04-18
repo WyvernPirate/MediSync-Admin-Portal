@@ -117,10 +117,6 @@ export default function DoctorDetailPage() {
                   <Phone className="w-4 h-4 mr-3 text-gray-500" />
                   <span className="text-sm">{doctor.phone}</span>
                 </div>
-                <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-3 text-gray-500" />
-                  <span className="text-sm">{doctor.availability}</span>
-                </div>
               </div>
             </CardContent>
           </Card>
@@ -138,8 +134,6 @@ export default function DoctorDetailPage() {
                   <div className="bg-medical-primary/10 p-2 rounded-full mb-3">
                     <Medal className="h-6 w-6 text-medical-primary" />
                   </div>
-                  <div className="text-2xl font-bold">{doctor.experience}</div>
-                  <div className="text-xs text-gray-500">Years Experience</div>
                 </div>
       
                 <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center">
@@ -170,12 +164,6 @@ export default function DoctorDetailPage() {
                   <div className="flex">
                     <div className="flex-shrink-0 h-4 w-4 rounded-full bg-gray-300 mt-1" />
                     <div className="ml-4">
-                      <div className="text-sm text-gray-500">
-                        {new Date(new Date(doctor.createdAt).getTime() - (doctor.experience * 365 * 24 * 60 * 60 * 1000)).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long"
-                        })} (Approximately)
-                      </div>
                     </div>
                   </div>
                 </div>
