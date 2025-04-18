@@ -83,8 +83,8 @@ export default function DoctorCard({ doctor, onDelete }: DoctorCardProps) {
           <p className="text-gray-500 text-sm">{doctor.specialty}</p>
           
           <div className="flex items-center mt-4 text-sm">
-            <Badge variant="outline" className={getStatusColor(doctor.status)}>
-              {doctor.status.charAt(0).toUpperCase() + doctor.status.slice(1)}
+            <Badge variant="outline" className={getStatusColor(doctor.status || 'active')}>
+              {doctor.status && doctor.status.charAt(0).toUpperCase() + doctor.status.slice(1) || 'Active'}
             </Badge>
             <div className="ml-auto flex items-center text-gray-500">
               <span className="mr-1">{doctor.rating}</span>

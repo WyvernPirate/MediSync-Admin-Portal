@@ -60,6 +60,10 @@ export default function DoctorDetailPage() {
     );
   }
 
+  const statusDisplay = doctor.status ? 
+    doctor.status.charAt(0).toUpperCase() + doctor.status.slice(1) : 
+    'Active';
+
   return (
     <DashboardLayout>
       <div className="flex flex-col gap-6">
@@ -99,9 +103,9 @@ export default function DoctorDetailPage() {
               <p className="text-muted-foreground">{doctor.specialty}</p>
               
               <Badge 
-                className={`mt-4 ${getStatusColor(doctor.status)}`}
+                className={`mt-4 ${getStatusColor(doctor.status || 'active')}`}
               >
-                {doctor.status.charAt(0).toUpperCase() + doctor.status.slice(1)}
+                {statusDisplay}
               </Badge>
               
               <div className="w-full mt-6 space-y-4">

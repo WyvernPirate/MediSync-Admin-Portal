@@ -51,7 +51,6 @@ export const doctors: Doctor[] = [
     id: "4",
     name: "Dr. Emily Parker",
     specialty: "Pediatrics",
-   
     email: "emily.parker@example.com",
     phone: "456-789-0123",
     imageUrl: "https://randomuser.me/api/portraits/women/42.jpg",
@@ -67,7 +66,6 @@ export const doctors: Doctor[] = [
     id: "5",
     name: "Dr. Robert Williams",
     specialty: "Dermatology",
-    
     email: "robert.williams@example.com",
     phone: "567-890-1234",
     imageUrl: "https://randomuser.me/api/portraits/men/45.jpg",

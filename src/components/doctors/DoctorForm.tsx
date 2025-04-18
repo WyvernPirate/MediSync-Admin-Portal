@@ -42,14 +42,14 @@ const formSchema = z.object({
   phone: z.string().min(5, {
     message: "Please enter a valid phone number.",
   }),
-  avatar: z.string().optional(),
+  imageUrl: z.string().optional(),
   experience: z.coerce.number().min(0, {
     message: "Experience must be a positive number.",
   }),
   availability: z.string().min(5, {
     message: "Please provide availability information.",
   }),
-  ratings: z.coerce.number().min(0).max(5, {
+  rating: z.coerce.number().min(0).max(5, {
     message: "Ratings must be between 0 and 5.",
   }),
   patients: z.coerce.number().min(0, {
@@ -74,10 +74,10 @@ export default function DoctorForm() {
       hospital: "",
       email: "",
       phone: "",
-      avatar: "",
+      imageUrl: "",
       experience: 0,
       availability: "",
-      ratings: 0,
+      rating: 0,
       patients: 0,
       status: "active",
     },
@@ -93,10 +93,10 @@ export default function DoctorForm() {
           
           email: doctor.email,
           phone: doctor.phone,
-          avatar: doctor.imageUrl || "",
+          imageUrl: doctor.imageUrl || "",
           experience: doctor.experience,
           availability: doctor.availability,
-          ratings: doctor.rating,
+          rating: doctor.rating,
           status: doctor.status,
         });
       } else {
@@ -219,10 +219,10 @@ export default function DoctorForm() {
           
           <FormField
             control={form.control}
-            name="avatar"
+            name="imageUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Avatar URL</FormLabel>
+                <FormLabel>Image URL</FormLabel>
                 <FormControl>
                   <Input placeholder="https://example.com/avatar.jpg" {...field} />
                 </FormControl>
@@ -261,10 +261,10 @@ export default function DoctorForm() {
           
           <FormField
             control={form.control}
-            name="ratings"
+            name="rating"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Ratings (0-5)</FormLabel>
+                <FormLabel>Rating (0-5)</FormLabel>
                 <FormControl>
                   <Input type="number" step="0.1" min="0" max="5" {...field} />
                 </FormControl>
