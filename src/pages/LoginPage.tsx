@@ -131,10 +131,6 @@ export default function LoginPage() {
             </CardFooter>
           </form>
         </Card>
-        
-        <div className="mt-6 text-center text-sm text-gray-600">
-          <p>Demo credentials: admin@meddash.com / admin123</p>
-        </div>
       </div>
     </div>
   );
