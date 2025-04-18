@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
@@ -29,7 +28,6 @@ export default function LoginPage() {
     }
 
     try {
-      // Query Firestore for admin with matching email
       const adminsRef = collection(db, 'admins');
       const q = query(adminsRef, where("email", "==", email));
       const querySnapshot = await getDocs(q);
@@ -42,14 +40,12 @@ export default function LoginPage() {
       const adminDoc = querySnapshot.docs[0];
       const admin = adminDoc.data();
       
-      // Compare hashed password
       const isValidPassword = await bcrypt.compare(password, admin.passwordHash);
       
       if (isValidPassword) {
-        // Store minimal auth state in localStorage
         localStorage.setItem("isAuthenticated", "true");
         toast.success("Login successful");
-        navigate("/");
+        navigate("/dashboard");
       } else {
         toast.error("Invalid credentials");
       }

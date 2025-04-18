@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -35,9 +34,12 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
+              {/* Redirect root to login if not authenticated */}
+              <Route path="/" element={<Navigate to="/login" replace />} />
               <Route path="/login" element={<LoginPage />} />
               
-              <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              {/* Protected routes */}
+              <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
               <Route path="/doctors" element={<ProtectedRoute><DoctorsPage /></ProtectedRoute>} />
               <Route path="/doctors/new" element={<ProtectedRoute><NewDoctorPage /></ProtectedRoute>} />
               <Route path="/doctors/edit/:id" element={<ProtectedRoute><EditDoctorPage /></ProtectedRoute>} />
