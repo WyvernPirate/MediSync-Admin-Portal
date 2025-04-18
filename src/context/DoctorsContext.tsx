@@ -30,7 +30,8 @@ export const DoctorsProvider = ({ children }: { children: ReactNode }) => {
         const querySnapshot = await getDocs(collection(db, 'doctors'));
         const doctorsData = querySnapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
+          createdAt: doc.data().createdAt || new Date().toISOString(), // Fallback for existing records
         })) as Doctor[];
         
         setDoctors(doctorsData);
@@ -47,8 +48,6 @@ export const DoctorsProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const setFilter = (filter: DoctorFilter) => {
-    setLoading(true);
-    
     let filtered = [...doctors];
     
     if (filter.search) {
@@ -56,7 +55,7 @@ export const DoctorsProvider = ({ children }: { children: ReactNode }) => {
       filtered = filtered.filter(
         (doctor) =>
           doctor.name.toLowerCase().includes(searchTerm) ||
-          doctor.email.toLowerCase().includes(searchTerm)
+          doctor.specialty.toLowerCase().includes(searchTerm)
       );
     }
     
@@ -73,11 +72,9 @@ export const DoctorsProvider = ({ children }: { children: ReactNode }) => {
     }
     
     setFilteredDoctors(filtered);
-    setLoading(false);
   };
 
   const addDoctor = async (doctorData: DoctorFormData) => {
-    setLoading(true);
     try {
       const docRef = await addDoc(collection(db, 'doctors'), {
         ...doctorData,
@@ -96,13 +93,11 @@ export const DoctorsProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Error adding doctor:", error);
       toast.error("Failed to add doctor");
-    } finally {
-      setLoading(false);
+      throw error;
     }
   };
 
   const updateDoctor = async (id: string, doctorData: DoctorFormData) => {
-    setLoading(true);
     try {
       await updateDoc(doc(db, 'doctors', id), doctorData);
       
@@ -116,13 +111,11 @@ export const DoctorsProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Error updating doctor:", error);
       toast.error("Failed to update doctor");
-    } finally {
-      setLoading(false);
+      throw error;
     }
   };
 
   const deleteDoctor = async (id: string) => {
-    setLoading(true);
     try {
       await deleteDoc(doc(db, 'doctors', id));
       
@@ -133,8 +126,7 @@ export const DoctorsProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Error deleting doctor:", error);
       toast.error("Failed to delete doctor");
-    } finally {
-      setLoading(false);
+      throw error;
     }
   };
 
