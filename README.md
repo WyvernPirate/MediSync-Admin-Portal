@@ -60,35 +60,6 @@ This is the administrative web application for the Doctor Appointment mobile app
 
     This will start the web application on a local development server (`http://localhost:5173`).
 
-## Project Structure
-doctor-appointment-admin-web/
-
-├── .env
-├── public/
-
-│   └── ...
-├── src/
-│   ├── App.tsx
-│   ├── main.tsx
-│   ├── components/
-│   │   ├── DoctorForm.tsx
-│   │   ├── DoctorList.tsx
-│   │   └── ...
-│   ├── firebase.ts
-│   ├── hooks/
-│   │   └── ...
-│   ├── interfaces/
-│   │   └── Doctor.ts
-│   ├── styles/
-│   │   └── ...
-│   └── ...
-├── index.html
-├── package.json
-├── README.md
-├── tsconfig.json
-├── tsconfig.node.json
-└── vite.config.ts
-
 
 ## Contributing
 
