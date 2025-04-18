@@ -8,6 +8,8 @@ export interface Doctor {
   rating: number;
   address: string;
   status: 'active' | 'on-leave' | 'retired';
+  email: string;
+  phone: string;
   createdAt: string;
 }
 
