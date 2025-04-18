@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChevronLeft, Mail, Phone, Star, Users, Calendar, Medal, Building, Pencil } from "lucide-react";
+import { ChevronLeft, Star, Medal, Building, Pencil } from "lucide-react";
 import DeleteDoctorDialog from "@/components/doctors/DeleteDoctorDialog";
 import { useState } from "react";
 
@@ -108,13 +108,10 @@ export default function DoctorDetailPage() {
               </Badge>
               
               <div className="w-full mt-6 space-y-4">
+                <p className="text-sm text-gray-600">{doctor.bio}</p>
                 <div className="flex items-center">
-                  <Mail className="w-4 h-4 mr-3 text-gray-500" />
-                  <span className="text-sm">{doctor.email}</span>
-                </div>
-                <div className="flex items-center">
-                  <Phone className="w-4 h-4 mr-3 text-gray-500" />
-                  <span className="text-sm">{doctor.phone}</span>
+                  <Building className="w-4 h-4 mr-3 text-gray-500" />
+                  <span className="text-sm">{doctor.address}</span>
                 </div>
               </div>
             </CardContent>
@@ -133,6 +130,8 @@ export default function DoctorDetailPage() {
                   <div className="bg-medical-primary/10 p-2 rounded-full mb-3">
                     <Medal className="h-6 w-6 text-medical-primary" />
                   </div>
+                  <div className="text-2xl font-bold">{doctor.specialty}</div>
+                  <div className="text-xs text-gray-500">Specialty</div>
                 </div>
       
                 <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center">
@@ -158,11 +157,6 @@ export default function DoctorDetailPage() {
                           day: "numeric"
                         })}
                       </div>
-                    </div>
-                  </div>
-                  <div className="flex">
-                    <div className="flex-shrink-0 h-4 w-4 rounded-full bg-gray-300 mt-1" />
-                    <div className="ml-4">
                     </div>
                   </div>
                 </div>

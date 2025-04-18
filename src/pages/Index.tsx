@@ -6,11 +6,8 @@ import { Link } from "react-router-dom";
 import { useDoctors } from "@/context/DoctorsContext";
 import { 
   UserRound, 
-  UserPlus, 
-  UserMinus, 
-  TrendingUp, 
+  UserPlus,
   Activity,
-  UserCog
 } from "lucide-react";
 import DoctorList from "@/components/doctors/DoctorList";
 
@@ -37,7 +34,7 @@ export default function Index() {
           </Button>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Doctors</CardTitle>
@@ -57,13 +54,6 @@ export default function Index() {
                 </div>
               </div>
             </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
-              <UserCog className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
           </Card>
           
           <Card>
