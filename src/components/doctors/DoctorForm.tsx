@@ -44,6 +44,12 @@ const formSchema = z.object({
   address: z.string().min(5, {
     message: "Please enter a valid address.",
   }),
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+  phone: z.string().min(10, {
+    message: "Please enter a valid phone number.",
+  }),
   status: z.enum(["active", "on-leave", "retired"], {
     message: "Please select a valid status.",
   }),
@@ -64,6 +70,8 @@ export default function DoctorForm() {
       imageUrl: "",
       rating: 0,
       address: "",
+      email: "",
+      phone: "",
       status: "active",
     },
   });
@@ -79,6 +87,8 @@ export default function DoctorForm() {
           imageUrl: doctor.imageUrl,
           rating: doctor.rating,
           address: doctor.address,
+          email: doctor.email,
+          phone: doctor.phone,
           status: doctor.status,
         });
       }
@@ -136,6 +146,32 @@ export default function DoctorForm() {
                     <SelectItem value="Orthopedics">Orthopedics</SelectItem>
                   </SelectContent>
                 </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="john.mclean@examplepetstore.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone</FormLabel>
+                <FormControl>
+                  <Input placeholder="123-456-789" {...form} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
