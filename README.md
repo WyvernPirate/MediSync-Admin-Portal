@@ -61,9 +61,11 @@ This is the administrative web application for the Doctor Appointment mobile app
     This will start the web application on a local development server (`http://localhost:5173`).
 
 ## Project Structure
-doctor-appointment-admin-web/\n
-├── .env\n
+doctor-appointment-admin-web/
+
+├── .env
 ├── public/
+
 │   └── ...
 ├── src/
 │   ├── App.tsx
