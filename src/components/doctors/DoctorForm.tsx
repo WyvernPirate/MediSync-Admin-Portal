@@ -47,7 +47,7 @@ const formSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
-  phone: z.string().min(10, {
+  phone: z.string().min(9, {
     message: "Please enter a valid phone number.",
   }),
   status: z.enum(["active", "on-leave", "retired"], {
@@ -170,7 +170,7 @@ export default function DoctorForm() {
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input placeholder="123-456-789" {...form} />
+                  <Input  type="tel" placeholder="123-456-789" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
