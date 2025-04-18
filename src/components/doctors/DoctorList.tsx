@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useDoctors } from "@/context/DoctorsContext";
 import DoctorCard from "./DoctorCard";
@@ -48,25 +47,15 @@ export default function DoctorList() {
               onChange={handleSearchChange}
             />
           </div>
-          <div className="flex gap-2">
-            <div className="w-full md:w-48">
-              <Select onValueChange={handleSpecialtyChange} defaultValue="all">
-                <SelectTrigger>
-                  <SelectValue placeholder="Specialty" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Specialties</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="w-full md:w-40">
-              <Select onValueChange={handleStatusChange} defaultValue="all">
-                <SelectTrigger>
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-               
-              </Select>
-            </div>
+          <div className="w-full md:w-48">
+            <Select onValueChange={handleSpecialtyChange} defaultValue="all">
+              <SelectTrigger>
+                <SelectValue placeholder="Specialty" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Specialties</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
