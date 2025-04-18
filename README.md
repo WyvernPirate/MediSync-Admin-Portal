@@ -1,73 +1,93 @@
-# Welcome to your Lovable project
+# Doctor Appointment Admin Web App
 
-## Project info
+This is the administrative web application for the Doctor Appointment mobile app. Built with Vite, React, and TypeScript, it provides administrators with the ability to manage doctors within the system.
 
-**URL**: https://lovable.dev/projects/4c0ca858-e6cc-4d53-bdbb-edf3d9120549
+## Features
 
-## How can I edit this code?
+-   **Doctor Management:**
+    -   **Create Doctor:** Add new doctor profiles to the system.
+    -   **Edit Doctor:** Modify existing doctor information.
+    -   **Delete Doctor:** Remove doctor profiles from the system.
+-   **Data Storage:** Utilizes Firebase Firestore to store and manage doctor data.
 
-There are several ways of editing your application.
+## Technologies Used
 
-**Use Lovable**
+-   Vite
+-   React
+-   TypeScript
+-   Firebase (Firestore)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4c0ca858-e6cc-4d53-bdbb-edf3d9120549) and start prompting.
+## Setup Instructions
 
-Changes made via Lovable will be committed automatically to this repo.
+1.  **Clone the repository:**
 
-**Use your preferred IDE**
+    ```bash
+    git clone https://github.com/WyvernPirate/med-dash-admin/
+    ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2.  **Navigate to the project directory:**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+    ```bash
+    cd med-dash-admin
+    ```
 
-Follow these steps:
+3.  **Install dependencies:**
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+    ```bash
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+4.  **Set up Firebase:**
+    -   Go to your Firebase project console.
+    -   Create a new web app or select your existing one.
+    -   Obtain your Firebase configuration object.
+    -   Create a `.env` file in the root of your project and add your Firebase configuration as environment variables
+    -   Ensure you have the Firebase Firestore database set up in your Firebase project.
 
-# Step 3: Install the necessary dependencies.
-npm i
+5.  **Run the development server:**
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    # or
+    pnpm dev
+    ```
 
-**Edit a file directly in GitHub**
+    This will start the web application on a local development server (`http://localhost:5173`).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Project Structure
+doctor-appointment-admin-web/
+├── .env
+├── public/
+│   └── ...
+├── src/
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── components/
+│   │   ├── DoctorForm.tsx
+│   │   ├── DoctorList.tsx
+│   │   └── ...
+│   ├── firebase.ts
+│   ├── hooks/
+│   │   └── ...
+│   ├── interfaces/
+│   │   └── Doctor.ts
+│   ├── styles/
+│   │   └── ...
+│   └── ...
+├── index.html
+├── package.json
+├── README.md
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
 
-**Use GitHub Codespaces**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Contributing
 
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/4c0ca858-e6cc-4d53-bdbb-edf3d9120549) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Contributions are welcome! Please feel free to submit pull requests or open issues for bugs or feature requests.
