@@ -6,7 +6,6 @@ import { useDoctors } from "@/context/DoctorsContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { Doctor, DoctorFormData } from "@/types";
-import { specialties, hospitals, statuses } from "@/data/doctors";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -94,8 +93,6 @@ export default function DoctorForm() {
           email: doctor.email,
           phone: doctor.phone,
           imageUrl: doctor.imageUrl || "",
-          experience: doctor.experience,
-          availability: doctor.availability,
           rating: doctor.rating,
           status: doctor.status,
         });
@@ -148,13 +145,6 @@ export default function DoctorForm() {
                       <SelectValue placeholder="Select specialty" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
-                    {specialties.map((specialty) => (
-                      <SelectItem key={specialty} value={specialty}>
-                        {specialty}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
@@ -176,13 +166,6 @@ export default function DoctorForm() {
                       <SelectValue placeholder="Select hospital" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
-                    {hospitals.map((hospital) => (
-                      <SelectItem key={hospital} value={hospital}>
-                        {hospital}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
@@ -302,13 +285,6 @@ export default function DoctorForm() {
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
-                    {statuses.map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {status.charAt(0).toUpperCase() + status.slice(1)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
