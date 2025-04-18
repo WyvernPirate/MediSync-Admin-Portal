@@ -20,9 +20,6 @@ export default function Index() {
   const activeDoctors = doctors.filter(doc => doc.status === "active").length;
   const onLeaveDoctors = doctors.filter(doc => doc.status === "on-leave").length;
   const retiredDoctors = doctors.filter(doc => doc.status === "retired").length;
-  const avgExperience = doctors.length 
-    ? Math.round(doctors.reduce((acc, doctor) => acc + doctor.experience, 0) / doctors.length) 
-    : 0;
   const avgRating = doctors.length 
     ? parseFloat((doctors.reduce((acc, doctor) => acc + doctor.rating, 0) / doctors.length).toFixed(1)) 
     : 0;
@@ -79,10 +76,6 @@ export default function Index() {
                 <div>
                   <div className="text-2xl font-bold">{avgRating}</div>
                   <div className="text-xs text-muted-foreground">Avg. Rating</div>
-                </div>
-                <div className="border-l pl-4">
-                  <div className="text-2xl font-bold">{avgExperience}</div>
-                  <div className="text-xs text-muted-foreground">Avg. Years</div>
                 </div>
               </div>
             </CardContent>

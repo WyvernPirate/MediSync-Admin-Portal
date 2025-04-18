@@ -5,6 +5,8 @@ export interface Doctor {
   specialty: string;
   bio: string;
   imageUrl: string;
+  email: string;
+  phone: string;
   rating: number;
   address: string;
   status: 'active' | 'on-leave' | 'retired';
