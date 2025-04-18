@@ -1,4 +1,3 @@
-
 import { useParams, Link } from "react-router-dom";
 import { useDoctors } from "@/context/DoctorsContext";
 import DashboardLayout from "@/components/layout/DashboardLayout";

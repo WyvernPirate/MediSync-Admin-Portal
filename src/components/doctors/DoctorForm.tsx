@@ -5,7 +5,7 @@ import { z } from "zod";
 import { useDoctors } from "@/context/DoctorsContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { Doctor, DoctorFormData } from "@/types";
+import { DoctorFormData } from "@/types";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -23,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -32,27 +32,17 @@ const formSchema = z.object({
   specialty: z.string().min(1, {
     message: "Please select a specialty.",
   }),
-  hospital: z.string().min(1, {
-    message: "Please enter a hospital.",
+  bio: z.string().min(10, {
+    message: "Bio must be at least 10 characters.",
   }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  phone: z.string().min(5, {
-    message: "Please enter a valid phone number.",
-  }),
-  imageUrl: z.string().optional(),
-  experience: z.coerce.number().min(0, {
-    message: "Experience must be a positive number.",
-  }),
-  availability: z.string().min(5, {
-    message: "Please provide availability information.",
-  }),
+  imageUrl: z.string().url({
+    message: "Please enter a valid image URL.",
+  }).optional(),
   rating: z.coerce.number().min(0).max(5, {
-    message: "Ratings must be between 0 and 5.",
+    message: "Rating must be between 0 and 5.",
   }),
-  patients: z.coerce.number().min(0, {
-    message: "Patients must be a positive number.",
+  address: z.string().min(5, {
+    message: "Please enter a valid address.",
   }),
   status: z.enum(["active", "on-leave", "retired"], {
     message: "Please select a valid status.",
@@ -70,14 +60,10 @@ export default function DoctorForm() {
     defaultValues: {
       name: "",
       specialty: "",
-      hospital: "",
-      email: "",
-      phone: "",
+      bio: "",
       imageUrl: "",
-      experience: 0,
-      availability: "",
       rating: 0,
-      patients: 0,
+      address: "",
       status: "active",
     },
   });
@@ -89,32 +75,32 @@ export default function DoctorForm() {
         form.reset({
           name: doctor.name,
           specialty: doctor.specialty,
-          
-          email: doctor.email,
-          phone: doctor.phone,
-          imageUrl: doctor.imageUrl || "",
+          bio: doctor.bio,
+          imageUrl: doctor.imageUrl,
           rating: doctor.rating,
+          address: doctor.address,
           status: doctor.status,
         });
-      } else {
-        toast.error("Doctor not found");
-        navigate("/doctors");
       }
     }
-  }, [isEditMode, id, getDoctor, form, navigate]);
+  }, [isEditMode, id, getDoctor, form]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    if (isEditMode && id) {
-      updateDoctor(id, values as DoctorFormData);
-    } else {
-      addDoctor(values as DoctorFormData);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      if (isEditMode && id) {
+        await updateDoctor(id, values as DoctorFormData);
+      } else {
+        await addDoctor(values as DoctorFormData);
+      }
+      navigate("/doctors");
+    } catch (error) {
+      console.error("Error saving doctor:", error);
     }
-    navigate("/doctors");
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-3xl">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
@@ -136,70 +122,39 @@ export default function DoctorForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Specialty</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select specialty" />
                     </SelectTrigger>
                   </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Cardiology">Cardiology</SelectItem>
+                    <SelectItem value="Dermatology">Dermatology</SelectItem>
+                    <SelectItem value="Pediatrics">Pediatrics</SelectItem>
+                    <SelectItem value="Neurology">Neurology</SelectItem>
+                    <SelectItem value="Orthopedics">Orthopedics</SelectItem>
+                  </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
-            name="hospital"
+            name="bio"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Hospital</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select hospital" />
-                    </SelectTrigger>
-                  </FormControl>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Bio</FormLabel>
                 <FormControl>
-                  <Input placeholder="doctor@example.com" {...field} />
+                  <Textarea placeholder="Brief description of the doctor..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
-                <FormControl>
-                  <Input placeholder="123-456-7890" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
+
           <FormField
             control={form.control}
             name="imageUrl"
@@ -213,35 +168,7 @@ export default function DoctorForm() {
               </FormItem>
             )}
           />
-          
-          <FormField
-            control={form.control}
-            name="experience"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Years of Experience</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="availability"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Availability</FormLabel>
-                <FormControl>
-                  <Input placeholder="Mon-Fri, 9:00 AM - 5:00 PM" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
+
           <FormField
             control={form.control}
             name="rating"
@@ -255,36 +182,38 @@ export default function DoctorForm() {
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
-            name="patients"
+            name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Total Patients</FormLabel>
+                <FormLabel>Address</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input placeholder="123 Medical Center Dr." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="status"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                   </FormControl>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="on-leave">On Leave</SelectItem>
+                    <SelectItem value="retired">Retired</SelectItem>
+                  </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>

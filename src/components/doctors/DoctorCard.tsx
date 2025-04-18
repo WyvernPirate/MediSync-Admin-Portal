@@ -1,4 +1,3 @@
-
 import { Doctor } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -83,8 +82,8 @@ export default function DoctorCard({ doctor, onDelete }: DoctorCardProps) {
           <p className="text-gray-500 text-sm">{doctor.specialty}</p>
           
           <div className="flex items-center mt-4 text-sm">
-            <Badge variant="outline" className={getStatusColor(doctor.status || 'active')}>
-              {doctor.status && doctor.status.charAt(0).toUpperCase() + doctor.status.slice(1) || 'Active'}
+            <Badge variant="outline" className={getStatusColor(doctor.status)}>
+              {doctor.status.charAt(0).toUpperCase() + doctor.status.slice(1)}
             </Badge>
             <div className="ml-auto flex items-center text-gray-500">
               <span className="mr-1">{doctor.rating}</span>
@@ -104,15 +103,10 @@ export default function DoctorCard({ doctor, onDelete }: DoctorCardProps) {
           </div>
         </div>
         
-        <div className="grid grid-cols-3 divide-x border-t">
+        <div className="grid grid-cols-1 divide-x border-t">
           <div className="p-3 text-center">
-            <p className="text-xs text-gray-500">Since</p>
-            <p className="font-semibold">
-              {new Date(doctor.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short"
-              })}
-            </p>
+            <p className="text-xs text-gray-500">Address</p>
+            <p className="font-semibold text-sm truncate px-2">{doctor.address}</p>
           </div>
         </div>
       </CardContent>
