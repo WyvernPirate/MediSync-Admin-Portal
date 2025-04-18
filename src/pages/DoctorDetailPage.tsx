@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChevronLeft, Star, Medal, Building, Pencil } from "lucide-react";
+import { ChevronLeft, Star, Medal, Building, Pencil, Mail, Phone } from "lucide-react";
 import DeleteDoctorDialog from "@/components/doctors/DeleteDoctorDialog";
 import { useState } from "react";
 
@@ -59,14 +59,14 @@ export default function DoctorDetailPage() {
     );
   }
 
-  const statusDisplay = doctor.status ? 
-    doctor.status.charAt(0).toUpperCase() + doctor.status.slice(1) : 
+  const statusDisplay = doctor.status ?
+    doctor.status.charAt(0).toUpperCase() + doctor.status.slice(1) :
     'Active';
 
   return (
     <DashboardLayout>
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" asChild>
               <Link to="/doctors">
@@ -87,8 +87,9 @@ export default function DoctorDetailPage() {
             </Button>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* --- Profile Card --- */}
           <Card className="lg:col-span-1">
             <CardContent className="pt-6 flex flex-col items-center text-center">
               <Avatar className="h-32 w-32 mb-4">
@@ -97,26 +98,47 @@ export default function DoctorDetailPage() {
                   {getInitials(doctor.name)}
                 </AvatarFallback>
               </Avatar>
-              
+
               <h2 className="text-2xl font-bold mb-1">{doctor.name}</h2>
               <p className="text-muted-foreground">{doctor.specialty}</p>
-              
-              <Badge 
+
+              <Badge
                 className={`mt-4 ${getStatusColor(doctor.status || 'active')}`}
               >
                 {statusDisplay}
               </Badge>
-              
-              <div className="w-full mt-6 space-y-4">
-                <p className="text-sm text-gray-600">{doctor.bio}</p>
-                <div className="flex items-center">
-                  <Building className="w-4 h-4 mr-3 text-gray-500" />
+
+              {/* --- Updated Details Section --- */}
+              <div className="w-full mt-6 space-y-3 text-left px-4"> {/* Added text-left and padding */}
+                <p className="text-sm text-gray-600 text-center mb-4">{doctor.bio}</p> {/* Kept bio centered */}
+
+                {/* Address */}
+                <div className="flex items-start"> {/* Use items-start for alignment */}
+                  <Building className="w-4 h-4 mr-3 text-gray-500 flex-shrink-0 mt-1" />
                   <span className="text-sm">{doctor.address}</span>
                 </div>
+
+                {/* Email */}
+                <div className="flex items-center">
+                  <Mail className="w-4 h-4 mr-3 text-gray-500 flex-shrink-0" />
+                  <a href={`mailto:${doctor.email}`} className="text-sm text-blue-600 hover:underline break-all"> {/* Added link and break-all */}
+                    {doctor.email}
+                  </a>
+                </div>
+
+                {/* Phone */}
+                <div className="flex items-center">
+                  <Phone className="w-4 h-4 mr-3 text-gray-500 flex-shrink-0" />
+                  <a href={`tel:${doctor.phone}`} className="text-sm text-blue-600 hover:underline"> {/* Added link */}
+                    {doctor.phone}
+                  </a>
+                </div>
               </div>
+              {/* --- End of Updated Details Section --- */}
             </CardContent>
           </Card>
-          
+
+          {/* --- Information Card (remains largely the same) --- */}
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>Doctor Information</CardTitle>
@@ -125,7 +147,8 @@ export default function DoctorDetailPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* ... (Specialty/Rating blocks remain the same) ... */}
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> {/* Adjusted grid cols */}
                 <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center">
                   <div className="bg-medical-primary/10 p-2 rounded-full mb-3">
                     <Medal className="h-6 w-6 text-medical-primary" />
@@ -133,7 +156,7 @@ export default function DoctorDetailPage() {
                   <div className="text-2xl font-bold">{doctor.specialty}</div>
                   <div className="text-xs text-gray-500">Specialty</div>
                 </div>
-      
+
                 <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center">
                   <div className="bg-medical-primary/10 p-2 rounded-full mb-3">
                     <Star className="h-6 w-6 text-medical-primary" />
@@ -142,7 +165,7 @@ export default function DoctorDetailPage() {
                   <div className="text-xs text-gray-500">Overall Rating</div>
                 </div>
               </div>
-              
+
               <div className="border-t pt-6 mt-6">
                 <h3 className="text-lg font-semibold mb-4">Timeline</h3>
                 <div className="space-y-4">
@@ -159,13 +182,15 @@ export default function DoctorDetailPage() {
                       </div>
                     </div>
                   </div>
+                  {/* Add more timeline events here if needed */}
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
-      
+
+      {/* Delete Dialog remains the same */}
       <DeleteDoctorDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
