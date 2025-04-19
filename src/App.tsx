@@ -1,10 +1,10 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { DoctorsProvider } from "./context/DoctorsContext";
+import { ThemeProvider } from "./components/ThemeProvider";
 import Index from "./pages/Index";
 import DoctorsPage from "./pages/DoctorsPage";
 import NewDoctorPage from "./pages/NewDoctorPage";
@@ -28,18 +28,16 @@ const queryClient = new QueryClient();
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <DoctorsProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              {/* Redirect root to login if not authenticated */}
+    <ThemeProvider defaultTheme="system" storageKey="app-theme">
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <DoctorsProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
               <Route path="/" element={<Navigate to="/login" replace />} />
               <Route path="/login" element={<LoginPage />} />
               
-              {/* Protected routes */}
               <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
               <Route path="/doctors" element={<ProtectedRoute><DoctorsPage /></ProtectedRoute>} />
               <Route path="/doctors/new" element={<ProtectedRoute><NewDoctorPage /></ProtectedRoute>} />
@@ -49,10 +47,10 @@ const App = () => {
               
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </BrowserRouter>
-        </DoctorsProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+          </DoctorsProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 };
 
