@@ -34,6 +34,7 @@ export default function LoginPage() {
 
       if (querySnapshot.empty) {
         toast.error("Invalid credentials");
+        setIsLoading(false);
         return;
       }
 
@@ -44,6 +45,11 @@ export default function LoginPage() {
       
       if (isValidPassword) {
         localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("user", JSON.stringify({
+          name: admin.name || "Admin User",
+          email: admin.email
+        }));
+        
         toast.success("Login successful");
         navigate("/dashboard");
       } else {

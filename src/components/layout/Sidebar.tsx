@@ -25,7 +25,7 @@ const sidebarItems: SidebarItem[] = [
   {
     icon: LayoutDashboard,
     label: "Dashboard",
-    href: "/"
+    href: "/dashboard"  // Fixed the href to point to /dashboard instead of /
   },
   {
     icon: UserRound,
@@ -109,7 +109,7 @@ export default function Sidebar() {
         )}
       >
         <div className="flex items-center justify-between mb-8">
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/dashboard" className="flex items-center space-x-2">
             <div className="rounded-full bg-medical-primary w-8 h-8 flex items-center justify-center">
               <span className="text-white font-bold">MD</span>
             </div>
