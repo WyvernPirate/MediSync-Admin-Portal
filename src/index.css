@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -45,25 +46,25 @@
   }
 
   .dark {
-    --background: 240 5.9% 5%;
-    --foreground: 0 0% 98%;
-
-    --card: 240 5.9% 7%;
+    --background: 240 5.9% 5%; // Very dark background
+    --foreground: 0 0% 98%; // Light text
+    
+    --card: 240 5.9% 10%; // Slightly lighter than background for cards
     --card-foreground: 0 0% 98%;
 
-    --popover: 240 5.9% 5%;
+    --popover: 240 5.9% 7%; // Dark popover
     --popover-foreground: 0 0% 98%;
 
-    --primary: 260 38% 50%;
+    --primary: 260 38% 50%; // Keep existing primary color
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 217.2 32.6% 17.5%; // Dark secondary
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 260 37% 75%;
+    --accent: 260 37% 75%; // Purple accent
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -73,7 +74,7 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 265 50% 60%;
     
-    --sidebar-background: 240 5.9% 10%;
+    --sidebar-background: 240 5.9% 10%; // Dark sidebar background
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 260 38% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
