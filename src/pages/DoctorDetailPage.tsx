@@ -89,7 +89,7 @@ export default function DoctorDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* --- Profile Card --- */}
+          /* Profile Card */
           <Card className="lg:col-span-1">
             <CardContent className="pt-6 flex flex-col items-center text-center">
               <Avatar className="h-32 w-32 mb-4">
@@ -105,15 +105,14 @@ export default function DoctorDetailPage() {
               <Badge
                 className={`mt-4 ${getStatusColor(doctor.status || 'active')}`}
               >
-                {statusDisplay}
+               {statusDisplay}
               </Badge>
 
-              {/* --- Updated Details Section --- */}
-              <div className="w-full mt-6 space-y-3 text-left px-4"> {/* Added text-left and padding */}
-                <p className="text-sm text-gray-600 text-center mb-4">{doctor.bio}</p> {/* Kept bio centered */}
-
+              /* Details Section */
+              <div className="w-full mt-6 space-y-3 text-left px-4">
+                <p className="text-sm text-gray-600 text-center mb-4">{doctor.bio}</p> 
                 {/* Address */}
-                <div className="flex items-start"> {/* Use items-start for alignment */}
+                <div className="flex items-start"> 
                   <Building className="w-4 h-4 mr-3 text-gray-500 flex-shrink-0 mt-1" />
                   <span className="text-sm">{doctor.address}</span>
                 </div>
@@ -121,7 +120,7 @@ export default function DoctorDetailPage() {
                 {/* Email */}
                 <div className="flex items-center">
                   <Mail className="w-4 h-4 mr-3 text-gray-500 flex-shrink-0" />
-                  <a href={`mailto:${doctor.email}`} className="text-sm text-blue-600 hover:underline break-all"> {/* Added link and break-all */}
+                  <a href={`mailto:${doctor.email}`} className="text-sm text-blue-600 hover:underline break-all"> 
                     {doctor.email}
                   </a>
                 </div>
@@ -134,11 +133,10 @@ export default function DoctorDetailPage() {
                   </a>
                 </div>
               </div>
-              {/* --- End of Updated Details Section --- */}
             </CardContent>
           </Card>
 
-          {/* --- Information Card (remains largely the same) --- */}
+          /* Information Card */
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>Doctor Information</CardTitle>
@@ -147,8 +145,8 @@ export default function DoctorDetailPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* ... (Specialty/Rating blocks remain the same) ... */}
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> {/* Adjusted grid cols */}
+              /* Specialty/Rating */
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> 
                 <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center">
                   <div className="bg-medical-primary/10 p-2 rounded-full mb-3">
                     <Medal className="h-6 w-6 text-medical-primary" />
@@ -182,7 +180,6 @@ export default function DoctorDetailPage() {
                       </div>
                     </div>
                   </div>
-                  {/* Add more timeline events here if needed */}
                 </div>
               </div>
             </CardContent>
@@ -190,7 +187,7 @@ export default function DoctorDetailPage() {
         </div>
       </div>
 
-      {/* Delete Dialog remains the same */}
+      /* Delete Dialog */
       <DeleteDoctorDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
