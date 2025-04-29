@@ -58,7 +58,7 @@ This is the administrative web application for the Doctor Appointment mobile app
     pnpm dev
     ```
 
-    This will start the web application on a local development server (`http://localhost:5173`).
+    This will start the web application on a local development server (`https://wyvernpirate.github.io/med-dash-admin`).
 
 
 ## Contributing
