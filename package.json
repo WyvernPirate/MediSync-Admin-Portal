@@ -1,7 +1,7 @@
 {
   "name": "vite_react_shadcn_ts",
   "private": true,
-  "homepage": "https://WyvernPirate.github.io/med-dash-admin",
+  "homepage": "https://wyvernpirate.github.io/med-dash-admin",
   "version": "0.1.0",
   "type": "module",
   "scripts": {
