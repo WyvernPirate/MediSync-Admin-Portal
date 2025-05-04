@@ -17,17 +17,33 @@ const firebaseConfig = {
 // Debug environment variables in development
 if (import.meta.env.DEV) {
   console.log("Firebase config:", {
-    apiKeyExists: !!import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomainExists: !!import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectIdExists: !!import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    // Don't log the actual values for security reasons, just whether they exist
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY?.substring(0, 5) + '...',
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID?.substring(0, 8) + '...',
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
   });
 }
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+// Try to initialize Firebase with error handling
+let app;
+let db;
+let auth;
+
+try {
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  auth = getAuth(app);
+  
+  if (import.meta.env.DEV) {
+    console.log("Firebase initialized successfully with project:", firebaseConfig.projectId);
+  }
+} catch (error) {
+  console.error("Error initializing Firebase:", error);
+  throw new Error("Failed to initialize Firebase. Please check your configuration.");
+}
 
 export const firebase = app;
 export { 
