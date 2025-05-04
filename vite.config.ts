@@ -1,15 +1,15 @@
+// vite.config.js
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
   },
-  base: "/med-dash-admin/",
+  base: "/med-dash-admin/", //  <-- Double-check this!
   plugins: [
     react(),
     mode === 'development' &&
@@ -19,5 +19,8 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  build: { // Add this build configuration
+    emptyOutDir: true, // Ensure the outDir is emptied before build
   },
 }));
