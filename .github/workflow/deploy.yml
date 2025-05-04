@@ -1,4 +1,3 @@
-# deploy.yml
 name: Deploy to GitHub Pages
 
 on:
@@ -38,12 +37,11 @@ jobs:
           ls -la
 
       - name: Build project
-        run: |
-          npm run build -- --mode production
+        run: npm run build -- --mode production
 
-          # Debug: List files after build
-          echo "Files after build:"
-          ls -la ./dist
+        # Debug: List files after build
+        # echo "Files after build:"
+        # ls -la ./dist
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v4
@@ -55,9 +53,13 @@ jobs:
     name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main # Checkout your main branch
+
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
@@ -65,8 +67,9 @@ jobs:
           path: ./dist
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          deploy_branch: gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages # The branch to deploy to
+          folder: dist # The folder containing the build output
+          clean: true # Automatically remove deleted files from the deploy branch
