@@ -1,3 +1,4 @@
+# deploy.yml
 name: Deploy to GitHub Pages
 
 on:
@@ -32,18 +33,17 @@ jobs:
           echo "VITE_FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}" >> .env.production
           echo "VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.FIREBASE_MEASUREMENT_ID }}" >> .env.production
 
-          # Debug: Check .env.production file was created
-          echo "Checking .env.production file exists:"
-          if [ -f ".env.production" ]; then
-            echo ".env.production exists"
-            cat .env.production # You can temporarily print the content for debugging
-          else
-            echo ".env.production does not exist"
-            exit 1
-          fi
+          # Debug: List files before build
+          echo "Files before build:"
+          ls -la
 
       - name: Build project
-        run: npm run build -- --mode production
+        run: |
+          npm run build -- --mode production
+
+          # Debug: List files after build
+          echo "Files after build:"
+          ls -la ./dist
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v4
