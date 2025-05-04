@@ -27,12 +27,17 @@ if (import.meta.env.DEV) {
   });
 }
 
-// Try to initialize Firebase with error handling
+// Initialize Firebase with error handling
 let app;
 let db;
 let auth;
 
 try {
+  // Check if required Firebase config is available
+  if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+    throw new Error("Missing required Firebase configuration");
+  }
+
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
   auth = getAuth(app);

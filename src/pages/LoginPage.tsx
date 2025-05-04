@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
@@ -28,6 +29,11 @@ export default function LoginPage() {
     }
 
     try {
+      // Make sure db is properly initialized before using it
+      if (!db) {
+        throw new Error("Firebase database is not initialized");
+      }
+
       const adminsRef = collection(db, 'admins');
       const q = query(adminsRef, where("email", "==", email));
       const querySnapshot = await getDocs(q);
