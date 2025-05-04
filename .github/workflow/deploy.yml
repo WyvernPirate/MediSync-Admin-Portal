@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: write # Grant write permission to the contents of the repository
+  contents: write 
 
 jobs:
   build:
