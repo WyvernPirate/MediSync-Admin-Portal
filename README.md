@@ -57,8 +57,9 @@ This is the administrative web application for the Doctor Appointment mobile app
     # or
     pnpm dev
     ```
+6.  **Hosting:**
 
-    This will start the web application on a local development server (`https://wyvernpirate.github.io/med-dash-admin`).
+      This will start the web application on firebase hosting platform (`https://doctorappointmentapp-9f11a.web.app/`)
 
 
 ## Contributing
