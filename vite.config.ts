@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: "/med-dash-admin/", //  <-- Double-check this!
+  base: "/", // <-- Change this to root
   plugins: [
     react(),
     mode === 'development' &&
