@@ -1,3 +1,4 @@
+
 import { useParams, Link } from "react-router-dom";
 import { useDoctors } from "@/context/DoctorsContext";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -11,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ChevronLeft, Star, Medal, Building, Pencil, Mail, Phone } from "lucide-react";
+import { ChevronLeft, Star, Medal, Building, Pencil, Mail, Phone, MapPin } from "lucide-react";
 import DeleteDoctorDialog from "@/components/doctors/DeleteDoctorDialog";
 import { useState } from "react";
 
@@ -63,6 +64,13 @@ export default function DoctorDetailPage() {
     doctor.status.charAt(0).toUpperCase() + doctor.status.slice(1) :
     'Active';
 
+  const openLocationInMaps = () => {
+    if (doctor.location?.latitude && doctor.location?.longitude) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${doctor.location.latitude},${doctor.location.longitude}`;
+      window.open(url, '_blank');
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="flex flex-col gap-6">
@@ -89,7 +97,7 @@ export default function DoctorDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          /* Profile Card */
+          {/* Profile Card */}
           <Card className="lg:col-span-1">
             <CardContent className="pt-6 flex flex-col items-center text-center">
               <Avatar className="h-32 w-32 mb-4">
@@ -108,7 +116,7 @@ export default function DoctorDetailPage() {
                {statusDisplay}
               </Badge>
 
-              /* Details Section */
+              {/* Details Section */}
               <div className="w-full mt-6 space-y-3 text-left px-4">
                 <p className="text-sm text-gray-600 text-center mb-4">{doctor.bio}</p> 
                 {/* Address */}
@@ -128,15 +136,29 @@ export default function DoctorDetailPage() {
                 {/* Phone */}
                 <div className="flex items-center">
                   <Phone className="w-4 h-4 mr-3 text-gray-500 flex-shrink-0" />
-                  <a href={`tel:${doctor.phone}`} className="text-sm text-blue-600 hover:underline"> {/* Added link */}
+                  <a href={`tel:${doctor.phone}`} className="text-sm text-blue-600 hover:underline">
                     {doctor.phone}
                   </a>
                 </div>
+
+                {/* Location */}
+                {doctor.location && (
+                  <div className="flex items-center">
+                    <MapPin className="w-4 h-4 mr-3 text-gray-500 flex-shrink-0" />
+                    <Button 
+                      variant="link" 
+                      className="p-0 h-auto text-sm text-blue-600 hover:underline"
+                      onClick={openLocationInMaps}
+                    >
+                      View on map
+                    </Button>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
 
-          /* Information Card */
+          {/* Information Card */}
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>Doctor Information</CardTitle>
@@ -145,7 +167,7 @@ export default function DoctorDetailPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              /* Specialty/Rating */
+              {/* Specialty/Rating */}
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> 
                 <div className="bg-gray-50 rounded-lg p-4 flex flex-col items-center">
                   <div className="bg-medical-primary/10 p-2 rounded-full mb-3">
@@ -163,6 +185,24 @@ export default function DoctorDetailPage() {
                   <div className="text-xs text-gray-500">Overall Rating</div>
                 </div>
               </div>
+
+              {/* Location map preview if coordinates exist */}
+              {doctor.location && (
+                <div className="border rounded-lg overflow-hidden">
+                  <div className="p-3 font-medium border-b bg-gray-50">Location</div>
+                  <div className="aspect-video w-full">
+                    <iframe
+                      title="Doctor Location"
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      style={{ border: 0 }}
+                      src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDvg2RoILliixs4gKkwljYDDHRVwFnQ4FM&q=${doctor.location.latitude},${doctor.location.longitude}&zoom=15`}
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                </div>
+              )}
 
               <div className="border-t pt-6 mt-6">
                 <h3 className="text-lg font-semibold mb-4">Timeline</h3>
@@ -187,7 +227,7 @@ export default function DoctorDetailPage() {
         </div>
       </div>
 
-      /* Delete Dialog */
+      {/* Delete Dialog */}
       <DeleteDoctorDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}

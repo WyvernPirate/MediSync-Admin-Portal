@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -31,6 +32,7 @@ if (import.meta.env.DEV) {
 let app;
 let db;
 let auth;
+let storage;
 
 try {
   // Check if required Firebase config is available
@@ -41,6 +43,7 @@ try {
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
   auth = getAuth(app);
+  storage = getStorage(app);
   
   if (import.meta.env.DEV) {
     console.log("Firebase initialized successfully with project:", firebaseConfig.projectId);
@@ -50,10 +53,24 @@ try {
   throw new Error("Failed to initialize Firebase. Please check your configuration.");
 }
 
+// Upload image to Firebase Storage
+export const uploadImage = async (file, path) => {
+  try {
+    const storageRef = ref(storage, path);
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    throw new Error("Failed to upload image. Please try again.");
+  }
+};
+
 export const firebase = app;
 export { 
   db, 
   auth,
+  storage,
   collection, 
   getDocs, 
   addDoc, 
@@ -61,5 +78,8 @@ export {
   deleteDoc, 
   doc,
   query,
-  where
+  where,
+  ref,
+  uploadBytes,
+  getDownloadURL
 };

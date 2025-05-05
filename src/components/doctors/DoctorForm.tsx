@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useDoctors } from "@/context/DoctorsContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DoctorFormData } from "@/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+import { uploadImage } from "@/lib/firebase";
+import { MapPin, Upload } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -35,9 +38,7 @@ const formSchema = z.object({
   bio: z.string().min(10, {
     message: "Bio must be at least 10 characters.",
   }),
-  imageUrl: z.string().url({
-    message: "Please enter a valid image URL.",
-  }).optional(),
+  imageUrl: z.string().optional(),
   rating: z.coerce.number().min(0).max(5, {
     message: "Rating must be between 0 and 5.",
   }),
@@ -53,6 +54,8 @@ const formSchema = z.object({
   status: z.enum(["active", "on-leave", "retired"], {
     message: "Please select a valid status.",
   }),
+  latitude: z.coerce.number().optional(),
+  longitude: z.coerce.number().optional(),
 });
 
 export default function DoctorForm() {
@@ -60,6 +63,9 @@ export default function DoctorForm() {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditMode = !!id;
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,6 +79,8 @@ export default function DoctorForm() {
       email: "",
       phone: "",
       status: "active",
+      latitude: undefined,
+      longitude: undefined,
     },
   });
 
@@ -90,21 +98,82 @@ export default function DoctorForm() {
           email: doctor.email,
           phone: doctor.phone,
           status: doctor.status,
+          latitude: doctor.location?.latitude,
+          longitude: doctor.location?.longitude,
         });
+        
+        if (doctor.imageUrl) {
+          setImagePreview(doctor.imageUrl);
+        }
       }
     }
   }, [isEditMode, id, getDoctor, form]);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          form.setValue("latitude", position.coords.latitude);
+          form.setValue("longitude", position.coords.longitude);
+          toast.success("Current location detected");
+        },
+        (error) => {
+          toast.error("Unable to retrieve your location");
+          console.error("Geolocation error:", error);
+        }
+      );
+    } else {
+      toast.error("Geolocation is not supported by this browser");
+    }
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      setIsUploading(true);
+      let imageUrl = values.imageUrl;
+
+      // Upload image if a new file is selected
+      if (imageFile) {
+        const fileName = `doctors/${Date.now()}_${imageFile.name}`;
+        imageUrl = await uploadImage(imageFile, fileName);
+      }
+
+      // Prepare doctor data with location
+      const doctorData: DoctorFormData = {
+        ...values,
+        imageUrl: imageUrl || "",
+        location: values.latitude && values.longitude 
+          ? { latitude: values.latitude, longitude: values.longitude }
+          : undefined
+      };
+
+      // Remove latitude and longitude as they're now in the location object
+      delete doctorData.latitude;
+      delete doctorData.longitude;
+
       if (isEditMode && id) {
-        await updateDoctor(id, values as DoctorFormData);
+        await updateDoctor(id, doctorData);
       } else {
-        await addDoctor(values as DoctorFormData);
+        await addDoctor(doctorData);
       }
       navigate("/doctors");
     } catch (error) {
       console.error("Error saving doctor:", error);
+      toast.error("Error saving doctor information");
+    } finally {
+      setIsUploading(false);
     }
   }
 
@@ -157,7 +226,7 @@ export default function DoctorForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="john.mclean@examplepetstore.com" {...field} />
+                  <Input placeholder="john.smith@example.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -170,7 +239,7 @@ export default function DoctorForm() {
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input  type="tel" placeholder="123-456-789" {...field} />
+                  <Input type="tel" placeholder="123-456-789" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -191,19 +260,45 @@ export default function DoctorForm() {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="imageUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image URL</FormLabel>
-                <FormControl>
-                  <Input placeholder="https://example.com/avatar.jpg" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Image Upload Field */}
+          <div className="space-y-2">
+            <FormLabel>Profile Image</FormLabel>
+            <div className="flex flex-col items-center p-4 border-2 border-dashed rounded-md border-gray-300 bg-gray-50">
+              {imagePreview ? (
+                <div className="w-full flex flex-col items-center gap-2">
+                  <img 
+                    src={imagePreview} 
+                    alt="Preview" 
+                    className="w-32 h-32 object-cover rounded-md mb-2" 
+                  />
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => {
+                      setImageFile(null);
+                      setImagePreview(null);
+                      form.setValue('imageUrl', '');
+                    }}
+                    size="sm"
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2">
+                  <Upload className="w-10 h-10 text-gray-400" />
+                  <p className="text-sm text-gray-500">Click to upload or drag and drop</p>
+                  <p className="text-xs text-gray-400">PNG, JPG (max. 5MB)</p>
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+            </div>
+          </div>
 
           <FormField
             control={form.control}
@@ -255,14 +350,61 @@ export default function DoctorForm() {
               </FormItem>
             )}
           />
+          
+          {/* Location Fields */}
+          <div className="col-span-1 md:col-span-2 p-4 border rounded-md space-y-4 bg-gray-50">
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium">Location Coordinates</h3>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm"
+                onClick={getCurrentLocation}
+                className="flex items-center gap-1"
+              >
+                <MapPin className="w-4 h-4" />
+                Get Current Location
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="latitude"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Latitude</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="any" placeholder="40.7128" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="longitude"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Longitude</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="any" placeholder="-74.0060" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
         </div>
         
         <div className="flex justify-end space-x-4">
           <Button variant="outline" type="button" onClick={() => navigate("/doctors")}>
             Cancel
           </Button>
-          <Button type="submit">
-            {isEditMode ? "Update Doctor" : "Add Doctor"}
+          <Button type="submit" disabled={isUploading}>
+            {isUploading ? "Uploading..." : isEditMode ? "Update Doctor" : "Add Doctor"}
           </Button>
         </div>
       </form>
