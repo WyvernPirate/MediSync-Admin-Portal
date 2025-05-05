@@ -268,7 +268,7 @@ export default function DoctorForm() {
             )}
           />
 
-          {/* Image Upload Field */}
+          {/* Fixed Image Upload Field */}
           <div className="space-y-2">
             <FormLabel>Profile Image</FormLabel>
             <div className="flex flex-col items-center p-4 border-2 border-dashed rounded-md border-gray-300 bg-gray-50">
@@ -293,18 +293,18 @@ export default function DoctorForm() {
                   </Button>
                 </div>
               ) : (
-                <div className="flex flex-col items-center gap-2">
+                <label className="flex flex-col items-center gap-2 w-full cursor-pointer">
                   <Upload className="w-10 h-10 text-gray-400" />
-                  <p className="text-sm text-gray-500">Click to upload or drag and drop</p>
+                  <p className="text-sm text-gray-500">Click to upload</p>
                   <p className="text-xs text-gray-400">PNG, JPG (max. 5MB)</p>
-                </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
               )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
             </div>
           </div>
 
