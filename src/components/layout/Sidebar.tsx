@@ -113,7 +113,7 @@ export default function Sidebar() {
             <div className="rounded-full bg-medical-primary w-8 h-8 flex items-center justify-center">
               <span className="text-white font-bold">MD</span>
             </div>
-            <h1 className="text-xl font-bold text-gray-900">MedDash</h1>
+            <h1 className="text-xl font-bold text-gray-900">MediSync</h1>
           </Link>
           
           {/* Close button (shown only on small screens) */}
