@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -56,6 +55,10 @@ const formSchema = z.object({
   }),
   latitude: z.coerce.number().optional(),
   longitude: z.coerce.number().optional(),
+  mondayToFriday: z.string().optional(),
+  saturday: z.string().optional(),
+  sunday: z.string().optional(),
+  generateSlots: z.boolean().optional(),
 });
 
 export default function DoctorForm() {
@@ -81,6 +84,10 @@ export default function DoctorForm() {
       status: "active",
       latitude: undefined,
       longitude: undefined,
+      mondayToFriday: "0900 - 1700 Hours",
+      saturday: "0900 - 1400 Hours",
+      sunday: "Closed",
+      generateSlots: true,
     },
   });
 
@@ -100,6 +107,10 @@ export default function DoctorForm() {
           status: doctor.status,
           latitude: doctor.location?.latitude,
           longitude: doctor.location?.longitude,
+          mondayToFriday: doctor.workingHours?.mondayToFriday || "0900 - 1700 Hours",
+          saturday: doctor.workingHours?.saturday || "0900 - 1400 Hours",
+          sunday: doctor.workingHours?.sunday || "Closed",
+          generateSlots: false,
         });
         
         if (doctor.imageUrl) {
@@ -139,6 +150,44 @@ export default function DoctorForm() {
     }
   };
 
+  // Generate time slots based on working hours
+  const generateTimeSlots = (startTime: string, endTime: string): string[] => {
+    if (!startTime || !endTime || startTime === "Closed" || endTime === "Closed") {
+      return [];
+    }
+
+    // Extract hours from format like "0900 - 1700 Hours"
+    const timeRegex = /(\d{4})\s*-\s*(\d{4})/;
+    const match = timeRegex.exec(startTime + " - " + endTime);
+    
+    if (!match) return [];
+    
+    const startHour = parseInt(match[1].substring(0, 2));
+    const startMinute = parseInt(match[1].substring(2, 4));
+    const endHour = parseInt(match[2].substring(0, 2));
+    const endMinute = parseInt(match[2].substring(2, 4));
+
+    const slots: string[] = [];
+    let currentHour = startHour;
+    let currentMinute = startMinute;
+
+    // Generate 30-minute slots
+    while (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute)) {
+      const hourStr = currentHour.toString().padStart(2, '0');
+      const minuteStr = currentMinute.toString().padStart(2, '0');
+      slots.push(`${hourStr}:${minuteStr}`);
+
+      // Add 30 minutes
+      currentMinute += 30;
+      if (currentMinute >= 60) {
+        currentMinute = 0;
+        currentHour += 1;
+      }
+    }
+
+    return slots;
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsUploading(true);
@@ -148,6 +197,23 @@ export default function DoctorForm() {
       if (imageFile) {
         const fileName = `doctors/${Date.now()}_${imageFile.name}`;
         imageUrl = await uploadImage(imageFile, fileName);
+      }
+
+      // Prepare working hours data
+      const workingHours = {
+        mondayToFriday: values.mondayToFriday || "0900 - 1700 Hours",
+        saturday: values.saturday || "0900 - 1400 Hours",
+        sunday: values.sunday || "Closed",
+      };
+
+      // Generate available slots if checked
+      let availableSlots: string[] = [];
+      if (values.generateSlots) {
+        // Generate slots for Monday to Friday
+        availableSlots = [
+          ...generateTimeSlots(workingHours.mondayToFriday, workingHours.mondayToFriday),
+          ...generateTimeSlots(workingHours.saturday, workingHours.saturday),
+        ];
       }
 
       // Prepare doctor data
@@ -161,6 +227,8 @@ export default function DoctorForm() {
         email: values.email,
         phone: values.phone,
         status: values.status,
+        workingHours,
+        availableSlots,
       };
 
       // Add location if latitude and longitude are provided
@@ -189,6 +257,7 @@ export default function DoctorForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Basic Info Section */}
           <FormField
             control={form.control}
             name="name"
@@ -268,7 +337,7 @@ export default function DoctorForm() {
             )}
           />
 
-          {/* Fixed Image Upload Field */}
+          {/* Image Upload Field */}
           <div className="space-y-2">
             <FormLabel>Profile Image</FormLabel>
             <div className="flex flex-col items-center p-4 border-2 border-dashed rounded-md border-gray-300 bg-gray-50">
@@ -358,6 +427,77 @@ export default function DoctorForm() {
               </FormItem>
             )}
           />
+          
+          {/* Working Hours Section */}
+          <div className="col-span-1 md:col-span-2 p-4 border rounded-md space-y-4 bg-gray-50">
+            <h3 className="font-medium">Working Hours</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="mondayToFriday"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Monday - Friday</FormLabel>
+                    <FormControl>
+                      <Input placeholder="0900 - 1700 Hours" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="saturday"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Saturday</FormLabel>
+                    <FormControl>
+                      <Input placeholder="0900 - 1400 Hours" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="sunday"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sunday</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Closed" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            
+            <FormField
+              control={form.control}
+              name="generateSlots"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                  <FormControl>
+                    <input
+                      type="checkbox"
+                      checked={field.value}
+                      onChange={field.onChange}
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Automatically generate available time slots (every 30 minutes)
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
           
           {/* Location Fields */}
           <div className="col-span-1 md:col-span-2 p-4 border rounded-md space-y-4 bg-gray-50">

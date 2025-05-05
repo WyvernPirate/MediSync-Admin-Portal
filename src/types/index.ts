@@ -15,6 +15,12 @@ export interface Doctor {
     latitude: number;
     longitude: number;
   };
+  workingHours?: {
+    mondayToFriday: string;
+    saturday: string;
+    sunday: string;
+  };
+  availableSlots?: string[];
 }
 
 export type DoctorFormData = Omit<Doctor, 'id' | 'createdAt'>;
