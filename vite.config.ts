@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: "/", // <-- Change this to root
+  base: "/", 
   plugins: [
     react(),
     mode === 'development' &&
@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: { // Add this build configuration
-    emptyOutDir: true, // Ensure the outDir is emptied before build
+  build: { 
+    emptyOutDir: true, 
   },
 }));
