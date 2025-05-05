@@ -150,18 +150,26 @@ export default function DoctorForm() {
         imageUrl = await uploadImage(imageFile, fileName);
       }
 
-      // Prepare doctor data with location
+      // Prepare doctor data
       const doctorData: DoctorFormData = {
-        ...values,
+        name: values.name,
+        specialty: values.specialty,
+        bio: values.bio,
         imageUrl: imageUrl || "",
-        location: values.latitude && values.longitude 
-          ? { latitude: values.latitude, longitude: values.longitude }
-          : undefined
+        rating: values.rating,
+        address: values.address,
+        email: values.email,
+        phone: values.phone,
+        status: values.status,
       };
 
-      // Remove latitude and longitude as they're now in the location object
-      delete doctorData.latitude;
-      delete doctorData.longitude;
+      // Add location if latitude and longitude are provided
+      if (values.latitude && values.longitude) {
+        doctorData.location = {
+          latitude: values.latitude,
+          longitude: values.longitude
+        };
+      }
 
       if (isEditMode && id) {
         await updateDoctor(id, doctorData);

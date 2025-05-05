@@ -186,20 +186,28 @@ export default function DoctorDetailPage() {
                 </div>
               </div>
 
-              {/* Location map preview if coordinates exist */}
+              {/* Location display if coordinates exist */}
               {doctor.location && (
                 <div className="border rounded-lg overflow-hidden">
                   <div className="p-3 font-medium border-b bg-gray-50">Location</div>
-                  <div className="aspect-video w-full">
-                    <iframe
-                      title="Doctor Location"
-                      width="100%"
-                      height="100%"
-                      frameBorder="0"
-                      style={{ border: 0 }}
-                      src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDvg2RoILliixs4gKkwljYDDHRVwFnQ4FM&q=${doctor.location.latitude},${doctor.location.longitude}&zoom=15`}
-                      allowFullScreen
-                    ></iframe>
+                  <div className="p-4">
+                    <div className="flex flex-col gap-2">
+                      <div className="bg-gray-100 p-4 rounded-lg flex flex-col items-center">
+                        <MapPin className="h-10 w-10 text-medical-primary mb-2" />
+                        <p className="text-center font-medium">Doctor's Location</p>
+                        <p className="text-sm text-gray-500 mt-2">
+                          Coordinates: {doctor.location.latitude.toFixed(6)}, {doctor.location.longitude.toFixed(6)}
+                        </p>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="mt-3"
+                          onClick={openLocationInMaps}
+                        >
+                          Open in Google Maps
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
